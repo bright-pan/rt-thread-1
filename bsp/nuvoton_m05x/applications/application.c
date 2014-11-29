@@ -26,7 +26,7 @@
 #endif  /* RT_USING_COMPONENTS_INIT */
 
 #include "led.h"
-
+#include "charge.h"
 /* led thread entry */
 static void led_thread_entry(void* parameter)
 {
@@ -36,6 +36,7 @@ static void led_thread_entry(void* parameter)
         rt_thread_delay(RT_TICK_PER_SECOND);
         set_led_test(LED_OFF);
         rt_thread_delay(RT_TICK_PER_SECOND);
+        get_charge_input_flag();
 	}
 }
 

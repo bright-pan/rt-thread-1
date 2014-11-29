@@ -18,13 +18,38 @@
 #include <rthw.h>
 #include <rtthread.h>
 #include "M051Series.h"
+#include "untils.h"
 
 #define CHRG_INPUT_FLAG_FULL 1
 
 #define CHRG_OUTPUT_EN_ON 1
 #define CHRG_OUTPUT_EN_OFF 0
 
-__INLINE int get_charge_input_flag(void);
-__INLINE int set_charge_output_enable(char dat);
+/*
+    CHRG INPUT FLAG: P3.2
+*/
+#define CHRG_INPUT_FLAG_PORT_IDX 3
+#define CHRG_INPUT_FLAG_PIN 2
+#define CHRG_INPUT_FLAG_PORT PORT_MAP[CHRG_INPUT_FLAG_PORT_IDX]
+#define CHRG_INPUT_FLAG_BIT BIT_MASK(CHRG_INPUT_FLAG_PIN)
+
+/*
+    CHRG OUTPUT ENABLE: P3.0
+*/
+#define CHRG_OUTPUT_EN_PORT_IDX 3
+#define CHRG_OUTPUT_EN_PIN 0
+#define CHRG_OUTPUT_EN_PORT PORT_MAP[CHRG_OUTPUT_EN_PORT_IDX]
+#define CHRG_OUTPUT_EN_BIT BIT_MASK(CHRG_OUTPUT_EN_PIN)
+
+__INLINE int get_charge_input_flag(void)
+{
+    return iport(CHRG_INPUT_FLAG_PORT_IDX, CHRG_INPUT_FLAG_PIN);
+}
+
+__INLINE int set_charge_output_enable(char dat)
+{
+    oport(CHRG_OUTPUT_EN_PORT_IDX, CHRG_OUTPUT_EN_PIN, dat);
+    return dat;
+}
 
 #endif

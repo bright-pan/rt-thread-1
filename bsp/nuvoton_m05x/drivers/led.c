@@ -13,63 +13,6 @@
  */
 
 #include "led.h"
-#include "untils.h"
-
-/*
-    LED test: P3.6
-*/
-#define LED_TEST_PORT_IDX 3
-#define LED_TEST_PIN 6
-#define LED_TEST_PORT PORT_MAP[LED_TEST_PORT_IDX]
-#define LED_TEST_BIT BIT_MASK(LED_TEST_PIN)
-
-/*
-    LED red: P41
-*/
-#define LED_RED_PORT_IDX 4
-#define LED_RED_PIN 1
-#define LED_RED_PORT PORT_MAP[LED_RED_PORT_IDX]
-#define LED_RED_BIT BIT_MASK(LED_RED_PIN)
-
-/*
-    LED yellow: P04
-*/
-#define LED_YELLOW_PORT_IDX 0
-#define LED_YELLOW_PIN 4
-#define LED_YELLOW_PORT PORT_MAP[LED_YELLOW_PORT_IDX]
-#define LED_YELLOW_BIT BIT_MASK(LED_YELLOW_PIN)
-
-/*
-    LED green: P05
-*/
-#define LED_GREEN_PORT_IDX 0
-#define LED_GREEN_PIN 5
-#define LED_GREEN_PORT PORT_MAP[LED_GREEN_PORT_IDX]
-#define LED_GREEN_BIT BIT_MASK(LED_GREEN_PIN)
-
-__INLINE int set_led_test(char dat)
-{
-    oport(LED_TEST_PORT_IDX, LED_TEST_PIN, dat);
-    return dat;
-}
-
-__INLINE int set_led_red(char dat)
-{
-    oport(LED_RED_PORT_IDX, LED_RED_PIN, dat);
-    return dat;
-}
-
-__INLINE int set_led_yellow(char dat)
-{
-    oport(LED_YELLOW_PORT_IDX, LED_YELLOW_PIN, dat);
-    return dat;
-}
-
-__INLINE int set_led_green(char dat)
-{
-    oport(LED_GREEN_PORT_IDX, LED_GREEN_PIN, dat);
-    return dat;
-}
 
 /* Initial gpio led pin  */
 int rt_hw_led_init(void)
@@ -107,9 +50,9 @@ INIT_DEVICE_EXPORT(rt_hw_led_init);
 #ifdef RT_USING_FINSH
 #include <finsh.h>
 
-FINSH_FUNCTION_EXPORT(set_led_test, [0 1]);
-FINSH_FUNCTION_EXPORT(set_led_red, [0 1]);
-FINSH_FUNCTION_EXPORT(set_led_yellow, [0 1]);
-FINSH_FUNCTION_EXPORT(set_led_green, [0 1]);
+FINSH_FUNCTION_EXPORT(set_led_test,);
+FINSH_FUNCTION_EXPORT(set_led_red,);
+FINSH_FUNCTION_EXPORT(set_led_yellow,);
+FINSH_FUNCTION_EXPORT(set_led_green,);
 
 #endif

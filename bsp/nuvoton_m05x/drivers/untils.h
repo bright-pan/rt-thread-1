@@ -23,7 +23,16 @@
 
 extern GPIO_T *PORT_MAP[];
 
-__INLINE int iport(char port, char pin);
-__INLINE int oport(char port, char pin, char dat);
+
+__INLINE int iport(char port, char pin)
+{
+    return GPIO_PIN_ADDR(port, pin);
+}
+
+__INLINE int oport(char port, char pin, char dat)
+{
+    GPIO_PIN_ADDR(port, pin) = dat;
+    return dat;
+}
 
 #endif
