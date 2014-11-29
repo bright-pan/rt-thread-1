@@ -19,9 +19,12 @@
 #include <rtthread.h>
 #include "M051Series.h"
 
-__INLINE void led_test_set(uint8_t dat);
-__INLINE void led_red_set(uint8_t dat);
-__INLINE void led_yellow_set(uint8_t dat);
-__INLINE void led_green_set(uint8_t dat);
+#define LED_ON 1
+#define LED_OFF 0
+
+__INLINE int set_led_test(char dat);
+__INLINE int set_led_red(char dat);
+__INLINE int set_led_yellow(char dat);
+__INLINE int set_led_green(char dat);
 
 #endif

@@ -14,6 +14,21 @@
 
 #include "untils.h"
 
+GPIO_T *PORT_MAP[] = {
+    P0, P1, P2, P3, P4
+};
+
+__INLINE int iport(char port, char pin)
+{
+    return GPIO_PIN_ADDR(port, pin);
+}
+
+__INLINE int oport(char port, char pin, char dat)
+{
+    GPIO_PIN_ADDR(port, pin) = dat;
+    return dat;
+}
+
 /**
 * @brief  Inserts a delay time.
 * @param  nCount: specifies the delay time length.
@@ -31,11 +46,7 @@ static void delay(__IO uint32_t nCount)
 #ifdef RT_USING_FINSH
 #include <finsh.h>
 
-int port(char x, char y)
-{
-    return GPIO_PIN_ADDR(x, y);
-}
-
-FINSH_FUNCTION_EXPORT(port,);
+FINSH_FUNCTION_EXPORT(iport,);
+FINSH_FUNCTION_EXPORT(oport,);
 
 #endif

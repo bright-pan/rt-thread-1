@@ -19,4 +19,12 @@
 #include <rtthread.h>
 #include "M051Series.h"
 
+#define CHRG_INPUT_FLAG_FULL 1
+
+#define CHRG_OUTPUT_EN_ON 1
+#define CHRG_OUTPUT_EN_OFF 0
+
+__INLINE int get_charge_input_flag(void);
+__INLINE int set_charge_output_enable(char dat);
+
 #endif

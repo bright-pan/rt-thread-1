@@ -19,6 +19,11 @@
 #include <rtthread.h>
 #include "M051Series.h"
 
-#define bits_mask(n) (1UL<<(n))
+#define BIT_MASK(n) (1UL<<(n))
+
+extern GPIO_T *PORT_MAP[];
+
+__INLINE int iport(char port, char pin);
+__INLINE int oport(char port, char pin, char dat);
 
 #endif

@@ -32,9 +32,9 @@ static void led_thread_entry(void* parameter)
 {
 	while(1)
 	{
-        led_test_set(0);
+        set_led_test(LED_ON);
         rt_thread_delay(RT_TICK_PER_SECOND);
-        led_test_set(1);
+        set_led_test(LED_OFF);
         rt_thread_delay(RT_TICK_PER_SECOND);
 	}
 }

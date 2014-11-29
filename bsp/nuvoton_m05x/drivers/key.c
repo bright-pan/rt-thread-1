@@ -17,72 +17,115 @@
 #include "untils.h"
 
 #define DEBUG_KEY 1
+
 /*
     KEY sw: P33
 */
-#define KEY_SW_PORT P3
-#define KEY_SW_BIT_IDX 3
-#define KEY_SW_PIN P33
-#define KEY_SW_BIT bits_mask(KEY_SW_BIT_IDX)
-#define KEY_SW_SET(dat) (KEY_SW_PIN = dat)
+#define KEY_SW_PORT_IDX 3
+#define KEY_SW_PIN 3
+#define KEY_SW_PORT PORT_MAP[KEY_SW_PORT_IDX]
+#define KEY_SW_BIT BIT_MASK(KEY_SW_PIN)
 
 /*
     KEY power: P34
 */
-#define KEY_PWR_PORT P3
-#define KEY_PWR_BIT_IDX 4
-#define KEY_PWR_PIN P34
-#define KEY_PWR_BIT bits_mask(KEY_PWR_BIT_IDX)
-#define KEY_PWR_SET(dat) (KEY_PWR_PIN = dat)
+#define KEY_PWR_PORT_IDX 3
+#define KEY_PWR_PIN 4
+#define KEY_PWR_PORT PORT_MAP[KEY_PWR_PORT_IDX]
+#define KEY_PWR_BIT BIT_MASK(KEY_PWR_PIN)
+
 /*
     KEY down: P35
 */
-#define KEY_DOWN_PORT P3
-#define KEY_DOWN_BIT_IDX 5
-#define KEY_DOWN_PIN P35
-#define KEY_DOWN_BIT bits_mask(KEY_DOWN_BIT_IDX)
-#define KEY_DOWN_SET(dat) (KEY_DOWN_PIN = dat)
+#define KEY_DOWN_PORT_IDX 3
+#define KEY_DOWN_PIN 5
+#define KEY_DOWN_PORT PORT_MAP[KEY_DOWN_PORT_IDX]
+#define KEY_DOWN_BIT BIT_MASK(KEY_DOWN_PIN)
+
 /*
     KEY up: P43
 */
-#define KEY_UP_PORT P4
-#define KEY_UP_BIT_IDX 3
-#define KEY_UP_PIN P43
-#define KEY_UP_BIT bits_mask(KEY_UP_BIT_IDX)
-#define KEY_UP_SET(dat) (KEY_UP_PIN = dat)
+#define KEY_UP_PORT_IDX 4
+#define KEY_UP_PIN 3
+#define KEY_UP_PORT PORT_MAP[KEY_UP_PORT_IDX]
+#define KEY_UP_BIT BIT_MASK(KEY_UP_PIN)
+
+__INLINE int set_key_sw(char dat)
+{
+    oport(KEY_SW_PORT_IDX, KEY_SW_PIN, dat);
+    return dat;
+}
+
+__INLINE int set_key_pwr(char dat)
+{
+    oport(KEY_PWR_PORT_IDX, KEY_PWR_PIN, dat);
+    return dat;
+}
+
+__INLINE int set_key_down(char dat)
+{
+    oport(KEY_DOWN_PORT_IDX, KEY_DOWN_PIN, dat);
+    return dat;
+}
+
+__INLINE int set_key_up(char dat)
+{
+    oport(KEY_UP_PORT_IDX, KEY_UP_PIN, dat);
+    return dat;
+}
+
+__INLINE int get_key_sw(void)
+{
+    return iport(KEY_SW_PORT_IDX, KEY_SW_PIN);
+}
+
+__INLINE int get_key_pwr(void)
+{
+    return iport(KEY_PWR_PORT_IDX, KEY_PWR_PIN);
+}
+
+__INLINE int get_key_down(void)
+{
+    return iport(KEY_DOWN_PORT_IDX, KEY_DOWN_PIN);
+}
+
+__INLINE int get_key_up(void)
+{
+    return iport(KEY_UP_PORT_IDX, KEY_UP_PIN);
+}
 
 /* Initial gpio key pin  */
 int rt_hw_key_init(void)
 {
 #ifdef KEY_SW_PORT
     /* Configure the key sw pin */
-    KEY_SW_SET(1);
+    set_key_sw(1);
     GPIO_SetMode(KEY_SW_PORT, KEY_SW_BIT, GPIO_PMD_QUASI);
-    GPIO_EnableInt(KEY_SW_PORT, KEY_SW_BIT_IDX, GPIO_INT_FALLING);
+    GPIO_EnableInt(KEY_SW_PORT, KEY_SW_PIN, GPIO_INT_FALLING);
     NVIC_EnableIRQ(GPIO_P2P3P4_IRQn);
 #endif
     
 #ifdef KEY_PWR_PORT
     /* Configure the key power pin */
-    KEY_PWR_SET(1);
+    set_key_pwr(1);
     GPIO_SetMode(KEY_PWR_PORT, KEY_PWR_BIT, GPIO_PMD_QUASI);
-    GPIO_EnableInt(KEY_PWR_PORT, KEY_PWR_BIT_IDX, GPIO_INT_FALLING);
+    GPIO_EnableInt(KEY_PWR_PORT, KEY_PWR_PIN, GPIO_INT_FALLING);
     NVIC_EnableIRQ(GPIO_P2P3P4_IRQn);
 #endif
 
 #ifdef KEY_DOWN_PORT
     /* Configure the key down pin */
-    KEY_DOWN_SET(1);
+    set_key_down(1);
     GPIO_SetMode(KEY_DOWN_PORT, KEY_DOWN_BIT, GPIO_PMD_QUASI);
-    GPIO_EnableInt(KEY_DOWN_PORT, KEY_DOWN_BIT_IDX, GPIO_INT_FALLING);
+    GPIO_EnableInt(KEY_DOWN_PORT, KEY_DOWN_PIN, GPIO_INT_FALLING);
     NVIC_EnableIRQ(GPIO_P2P3P4_IRQn);
 #endif
     
 #ifdef KEY_UP_PORT
     /* Configure the key up pin */
-    KEY_UP_SET(1);
+    set_key_up(1);
     GPIO_SetMode(KEY_UP_PORT, KEY_UP_BIT, GPIO_PMD_QUASI);
-    GPIO_EnableInt(KEY_UP_PORT, KEY_UP_BIT_IDX, GPIO_INT_FALLING);
+    GPIO_EnableInt(KEY_UP_PORT, KEY_UP_PIN, GPIO_INT_FALLING);
     NVIC_EnableIRQ(GPIO_P2P3P4_IRQn);
 #endif
     return 0;
@@ -137,7 +180,7 @@ void GPIOP2P3P4_IRQHandler(void)
     {
         cnts = 0;
         for (i = 0; i < 5000; i++) {
-            if (KEY_SW_PIN) {
+            if (get_key_sw()) {
                 cnts++;
             } else {
                 cnts--;
@@ -158,7 +201,7 @@ void GPIOP2P3P4_IRQHandler(void)
     {
         cnts = 0;
         for (i = 0; i < 5000; i++) {
-            if (KEY_PWR_PIN) {
+            if (get_key_pwr()) {
                 cnts++;
             } else {
                 cnts--;
@@ -179,7 +222,7 @@ void GPIOP2P3P4_IRQHandler(void)
     {
         cnts = 0;
         for (i = 0; i < 5000; i++) {
-            if (KEY_DOWN_PIN) {
+            if (get_key_down()) {
                 cnts++;
             } else {
                 cnts--;
@@ -197,10 +240,10 @@ void GPIOP2P3P4_IRQHandler(void)
         GPIO_CLR_INT_FLAG(KEY_DOWN_PORT, KEY_DOWN_BIT);
     }
     else if(GPIO_GET_INT_FLAG(KEY_UP_PORT, KEY_UP_BIT))
-    {        
+    {
         cnts = 0;
         for (i = 0; i < 5000; i++) {
-            if (KEY_UP_PIN) {
+            if (get_key_up()) {
                 cnts++;
             } else {
                 cnts--;
