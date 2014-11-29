@@ -38,20 +38,6 @@ void NVIC_Configuration(void)
 //    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2);
 }
 
-/**
-* @brief  Inserts a delay time.
-* @param  nCount: specifies the delay time length.
-* @retval None
-*/
-static void delay(__IO uint32_t nCount)
-{
-	/* Decrement nCount value */
-	while (nCount != 0)
-	{
-		nCount--;
-	}
-}
-
 static void rt_hw_system_init(void)
 {
     /*---------------------------------------------------------------------------------------------------------*/

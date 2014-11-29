@@ -32,9 +32,9 @@ static void led_thread_entry(void* parameter)
 {
 	while(1)
 	{
-        rt_hw_led_on();
+        led_test_set(0);
         rt_thread_delay(RT_TICK_PER_SECOND);
-        rt_hw_led_off();
+        led_test_set(1);
         rt_thread_delay(RT_TICK_PER_SECOND);
 	}
 }
@@ -56,7 +56,7 @@ static void rt_init_thread_entry(void* parameter)
     /* Create led thread */
     led_thread = rt_thread_create("led",
     		led_thread_entry, RT_NULL,
-    		128, 20, 20);
+    		256, 20, 20);
     if(led_thread != RT_NULL)
     	rt_thread_startup(led_thread);
 }
@@ -68,11 +68,11 @@ int rt_application_init()
 #if (RT_THREAD_PRIORITY_MAX == 32)
     init_thread = rt_thread_create("init",
                                    rt_init_thread_entry, RT_NULL,
-                                   512, 8, 20);
+                                   256, 8, 20);
 #else
     init_thread = rt_thread_create("init",
                                    rt_init_thread_entry, RT_NULL,
-                                   512, 80, 20);
+                                   256, 80, 20);
 #endif
     if(init_thread != RT_NULL)
     	rt_thread_startup(init_thread);

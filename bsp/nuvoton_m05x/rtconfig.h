@@ -16,9 +16,9 @@
 
 /* SECTION: RT_DEBUG */
 /* Thread Debug */
-//#define RT_DEBUG
-//#define RT_DEBUG_INIT 1
-//#define RT_USING_OVERFLOW_CHECK
+#define RT_DEBUG
+#define RT_DEBUG_INIT 1
+#define RT_USING_OVERFLOW_CHECK
 
 /* Using Hook */
 /* #define RT_USING_HOOK */
@@ -79,7 +79,7 @@
 #define RT_USING_FINSH
 /* configure finsh parameters */
 #define FINSH_THREAD_PRIORITY 25
-#define FINSH_THREAD_STACK_SIZE	512
+#define FINSH_THREAD_STACK_SIZE	600
 #define FINSH_USING_HISTORY 0
 #define FINSH_HISTORY_LINES	1
 /* Using symbol table */
@@ -87,7 +87,7 @@
 #define FINSH_USING_DESCRIPTION
 
 /* SECTION: libc management */
-//#define RT_USING_LIBC
+#define RT_USING_LIBC
 
 /* SECTION: device filesystem */
 /* #define RT_USING_DFS */

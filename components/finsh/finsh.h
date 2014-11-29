@@ -25,12 +25,12 @@
 #define FINSH_NAME_MAX          16      /* max length of identifier */
 #define FINSH_NODE_MAX          16      /* max number of node */
 
-#define FINSH_HEAP_MAX          128     /* max length of heap */
-#define FINSH_STRING_MAX        128     /* max length of string */
+#define FINSH_HEAP_MAX          64     /* max length of heap */
+#define FINSH_STRING_MAX        64     /* max length of string */
 #define FINSH_VARIABLE_MAX      8       /* max number of variable */
 
 #define FINSH_STACK_MAX         64      /* max stack size */
-#define FINSH_TEXT_MAX          128     /* max text segment size */
+#define FINSH_TEXT_MAX          64     /* max text segment size */
 
 #define HEAP_ALIGNMENT          4       /* heap alignment */
 
