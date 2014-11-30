@@ -16,14 +16,33 @@
 #include <rtdevice.h>
 #include "usart.h"
 
+static const uint32_t DATA_BITS_MAP[] = {
+    0,0,0,0,0,
+    UART_WORD_LEN_5,
+    UART_WORD_LEN_6,
+    UART_WORD_LEN_7,
+    UART_WORD_LEN_8
+};
+
+static const uint32_t STOP_BITS_MAP[] = {
+    UART_STOP_BIT_1,
+    UART_STOP_BIT_2
+};
+
+static const uint32_t PARITY_MAP[] = {
+    UART_PARITY_NONE,
+    UART_PARITY_ODD,
+    UART_PARITY_EVEN
+};
 
 static rt_err_t m05x_configure(struct rt_serial_device *serial, struct serial_configure *cfg)
 {
     UART_T* uart;
-
+    
     uart = (UART_T *)serial->parent.user_data;
-#if defined(RT_USING_UART0)
+
     if (uart == UART0) {
+#if defined(RT_USING_UART0_P3031)
         /* Enable UART module clock */
         CLK_EnableModuleClock(UART0_MODULE);
         /* Select UART module clock source */
@@ -37,14 +56,30 @@ static rt_err_t m05x_configure(struct rt_serial_device *serial, struct serial_co
         SYS_ResetModule(UART0_RST);
         /* Configure UART0 and set UART0 Baudrate */
         UART_Open(UART0, cfg->baud_rate);
-        
+        UART_SetLine_Config(UART0, cfg->baud_rate, DATA_BITS_MAP[cfg->data_bits], PARITY_MAP[cfg->parity], STOP_BITS_MAP[cfg->stop_bits]);
         /* Enable Interrupt */
         UART_EnableInt(UART0, UART_IER_RDA_IEN_Msk);
-    }
-#endif /* RT_USING_UART0 */
+#endif /* RT_USING_UART0_P3031 */
 
-#if defined(RT_USING_UART1)
-#endif /* RT_USING_UART1 */
+#if defined(RT_USING_UART0_P0203)
+        /* Enable UART module clock */
+        CLK_EnableModuleClock(UART0_MODULE);
+        /* Select UART module clock source */
+        CLK_SetModuleClock(UART0_MODULE, CLK_CLKSEL1_UART_S_PLL, CLK_CLKDIV_UART(1));
+
+        /* Set P3 multi-function pins for UART0 RXD and TXD */
+        SYS->P0_MFP &= ~(SYS_MFP_P03_Msk | SYS_MFP_P02_Msk);
+        SYS->P0_MFP |= (SYS_MFP_P03_RXD0 | SYS_MFP_P02_TXD0);
+
+        /* Reset IP */
+        SYS_ResetModule(UART0_RST);
+        /* Configure UART0 and set UART0 Baudrate */
+        UART_Open(UART0, cfg->baud_rate);
+        UART_SetLine_Config(UART0, cfg->baud_rate, DATA_BITS_MAP[cfg->data_bits], PARITY_MAP[cfg->parity], STOP_BITS_MAP[cfg->stop_bits]);
+        /* Enable Interrupt */
+        UART_EnableInt(UART0, UART_IER_RDA_IEN_Msk);
+#endif /* RT_USING_UART0_P0203 */
+    }
     return RT_EOK;
 }
 
@@ -100,7 +135,7 @@ static const struct rt_uart_ops m05x_uart_ops =
     m05x_getc,
 };
 
-#if defined(RT_USING_UART0)
+#if defined(RT_USING_UART0_P0203) || defined(RT_USING_UART0_P3031)
 struct rt_serial_device serial0;
 
 void UART0_IRQHandler(void)
@@ -118,7 +153,7 @@ void UART0_IRQHandler(void)
 
 void rt_hw_usart_init(void)
 {
-#ifdef RT_USING_UART0
+#if defined(RT_USING_UART0_P0203) || defined(RT_USING_UART0_P3031)
     struct serial_configure config = RT_SERIAL_CONFIG_DEFAULT;
     config.baud_rate = BAUD_RATE_115200;
     serial0.ops    = &m05x_uart_ops;

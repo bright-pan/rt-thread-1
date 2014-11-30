@@ -17,16 +17,13 @@
 
 int rt_hw_charge_init(void)
 {
-#ifdef CHRG_INPUT_FLAG_PORT
     /* Configure the charge input flag pin */
     GPIO_SetMode(CHRG_INPUT_FLAG_PORT, CHRG_INPUT_FLAG_BIT, GPIO_PMD_INPUT);
-#endif
 
-#ifdef CHRG_OUTPUT_EN_PORT
     /* Configure the charge output enable pin */
     set_charge_output_enable(CHRG_OUTPUT_EN_OFF);
     GPIO_SetMode(CHRG_OUTPUT_EN_PORT, CHRG_OUTPUT_EN_BIT, GPIO_PMD_OUTPUT);
-#endif
+    
     return 0;
 }
 

@@ -18,7 +18,8 @@
 #include <rthw.h>
 #include <rtthread.h>
 
-#define RT_USING_UART0
+//#define RT_USING_UART0_P3031
+#define RT_USING_UART0_P0203
 //#define RT_USING_UART1
 
 void rt_hw_usart_init(void);

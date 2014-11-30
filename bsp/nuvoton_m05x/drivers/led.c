@@ -22,24 +22,19 @@ int rt_hw_led_init(void)
     set_led_test(LED_OFF);
     GPIO_SetMode(LED_TEST_PORT, LED_GREEN_BIT, GPIO_PMD_OUTPUT);
 #endif
-    
-#ifdef LED_RED_PORT
+
     /* Configure the led red pin */
     set_led_red(LED_OFF);
     GPIO_SetMode(LED_RED_PORT, LED_RED_BIT, GPIO_PMD_OUTPUT);
-#endif
 
-#ifdef LED_YELLOW_PORT
     /* Configure the led yellow pin */
     set_led_yellow(LED_OFF);
     GPIO_SetMode(LED_YELLOW_PORT, LED_YELLOW_BIT, GPIO_PMD_OUTPUT);
-#endif
 
-#ifdef LED_GREEN_PORT
     /* Configure the led green pin */
     set_led_green(LED_OFF);
     GPIO_SetMode(LED_GREEN_PORT, LED_GREEN_BIT, GPIO_PMD_OUTPUT);
-#endif
+
     return 0;
 }
 
@@ -49,8 +44,9 @@ INIT_DEVICE_EXPORT(rt_hw_led_init);
 
 #ifdef RT_USING_FINSH
 #include <finsh.h>
-
+#ifdef LED_TEST_PORT
 FINSH_FUNCTION_EXPORT(set_led_test,);
+#endif
 FINSH_FUNCTION_EXPORT(set_led_red,);
 FINSH_FUNCTION_EXPORT(set_led_yellow,);
 FINSH_FUNCTION_EXPORT(set_led_green,);

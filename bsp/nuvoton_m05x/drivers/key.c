@@ -16,40 +16,44 @@
 #include "key.h"
 #include "untils.h"
 
+#define KEY_VALID_TIMEOUT 50000
+#define KEY_VALID_TIME 500
+#define KEY_VALID_VALUE 0
+
 /* Initial gpio key pin  */
 int rt_hw_key_init(void)
 {
-#ifdef KEY_SW_PORT
     /* Configure the key sw pin */
     set_key_sw(1);
     GPIO_SetMode(KEY_SW_PORT, KEY_SW_BIT, GPIO_PMD_QUASI);
-    GPIO_EnableInt(KEY_SW_PORT, KEY_SW_PIN, GPIO_INT_FALLING);
-    NVIC_EnableIRQ(GPIO_P2P3P4_IRQn);
-#endif
-    
-#ifdef KEY_PWR_PORT
+    GPIO_EnableEINT1(KEY_SW_PORT, KEY_SW_PIN, GPIO_INT_FALLING);
+
     /* Configure the key power pin */
     set_key_pwr(1);
     GPIO_SetMode(KEY_PWR_PORT, KEY_PWR_BIT, GPIO_PMD_QUASI);
     GPIO_EnableInt(KEY_PWR_PORT, KEY_PWR_PIN, GPIO_INT_FALLING);
-    NVIC_EnableIRQ(GPIO_P2P3P4_IRQn);
-#endif
-
-#ifdef KEY_DOWN_PORT
+    
     /* Configure the key down pin */
     set_key_down(1);
     GPIO_SetMode(KEY_DOWN_PORT, KEY_DOWN_BIT, GPIO_PMD_QUASI);
     GPIO_EnableInt(KEY_DOWN_PORT, KEY_DOWN_PIN, GPIO_INT_FALLING);
-    NVIC_EnableIRQ(GPIO_P2P3P4_IRQn);
-#endif
     
-#ifdef KEY_UP_PORT
     /* Configure the key up pin */
     set_key_up(1);
     GPIO_SetMode(KEY_UP_PORT, KEY_UP_BIT, GPIO_PMD_QUASI);
     GPIO_EnableInt(KEY_UP_PORT, KEY_UP_PIN, GPIO_INT_FALLING);
-    NVIC_EnableIRQ(GPIO_P2P3P4_IRQn);
-#endif
+    
+    /* Enable interrupt*/
+    NVIC_EnableIRQ(EINT1_IRQn); // key switch
+    NVIC_EnableIRQ(GPIO_P2P3P4_IRQn); // key power, key down, key up
+
+    /* Enable interrupt de-bounce function and select de-bounce sampling cycle time is 1024 * 10 KHz clock */
+    GPIO_SET_DEBOUNCE_TIME(GPIO_DBCLKSRC_LIRC, GPIO_DBCLKSEL_1024);
+    GPIO_ENABLE_DEBOUNCE(KEY_SW_PORT, KEY_SW_BIT);
+    GPIO_ENABLE_DEBOUNCE(KEY_PWR_PORT, KEY_PWR_BIT);
+    GPIO_ENABLE_DEBOUNCE(KEY_DOWN_PORT, KEY_DOWN_BIT);
+    GPIO_ENABLE_DEBOUNCE(KEY_UP_PORT, KEY_UP_BIT);
+    
     return 0;
 }
 
@@ -98,42 +102,22 @@ void GPIOP2P3P4_IRQHandler(void)
     /* enter interrupt */
     rt_interrupt_enter();
 
-    if(GPIO_GET_INT_FLAG(KEY_SW_PORT, KEY_SW_BIT))
+
+    if(GPIO_GET_INT_FLAG(KEY_PWR_PORT, KEY_PWR_BIT))
     {
         cnts = 0;
-        for (i = 0; i < 5000; i++) {
-            if (get_key_sw()) {
-                cnts++;
+        for (i = 0; i < KEY_VALID_TIMEOUT; i++) {
+            if (get_key_pwr() == KEY_VALID_VALUE) {
+                ++cnts;
             } else {
-                cnts--;
+                --cnts;
             }
-            if (cnts > 500)
-            {
-                RT_DEBUG_LOG(DEBUG_KEY, ("it is key switch...\n"));
-                break;
-            }
-            if (cnts < -500)
-            {
-                break;
-            }
-        }
-        GPIO_CLR_INT_FLAG(KEY_SW_PORT, KEY_SW_BIT);
-    }
-    else if(GPIO_GET_INT_FLAG(KEY_PWR_PORT, KEY_PWR_BIT))
-    {
-        cnts = 0;
-        for (i = 0; i < 5000; i++) {
-            if (get_key_pwr()) {
-                cnts++;
-            } else {
-                cnts--;
-            }
-            if (cnts > 500)
+            if (cnts > KEY_VALID_TIME)
             {
                 RT_DEBUG_LOG(DEBUG_KEY, ("it is key power...\n"));
                 break;
             }
-            if (cnts < -500)
+            if (cnts < -KEY_VALID_TIME)
             {
                 break;
             }
@@ -143,18 +127,18 @@ void GPIOP2P3P4_IRQHandler(void)
     else if(GPIO_GET_INT_FLAG(KEY_DOWN_PORT, KEY_DOWN_BIT))
     {
         cnts = 0;
-        for (i = 0; i < 5000; i++) {
-            if (get_key_down()) {
-                cnts++;
+        for (i = 0; i < KEY_VALID_TIMEOUT; i++) {
+            if (get_key_down() == KEY_VALID_VALUE) {
+                ++cnts;
             } else {
-                cnts--;
+                --cnts;
             }
-            if (cnts > 500)
+            if (cnts > KEY_VALID_TIME)
             {
                 RT_DEBUG_LOG(DEBUG_KEY, ("it is key down...\n"));
                 break;
             }
-            if (cnts < -500)
+            if (cnts < -KEY_VALID_TIME)
             {
                 break;
             }
@@ -164,18 +148,18 @@ void GPIOP2P3P4_IRQHandler(void)
     else if(GPIO_GET_INT_FLAG(KEY_UP_PORT, KEY_UP_BIT))
     {
         cnts = 0;
-        for (i = 0; i < 5000; i++) {
-            if (get_key_up()) {
-                cnts++;
+        for (i = 0; i < KEY_VALID_TIMEOUT; i++) {
+            if (get_key_up() == KEY_VALID_VALUE) {
+                ++cnts;
             } else {
-                cnts--;
+                --cnts;
             }
-            if (cnts > 500)
+            if (cnts > KEY_VALID_TIME)
             {
                 RT_DEBUG_LOG(DEBUG_KEY, ("it is key up...\n"));
                 break;
             }
-            if (cnts < -500)
+            if (cnts < -KEY_VALID_TIME)
             {
                 break;
             }
@@ -194,6 +178,36 @@ void GPIOP2P3P4_IRQHandler(void)
     /* leave interrupt */
     rt_interrupt_leave();
 }
+
+void EINT1_IRQHandler(void)
+{
+    register int cnts, i;
+    /* enter interrupt */
+    rt_interrupt_enter();
+
+    cnts = 0;
+    for (i = 0; i < KEY_VALID_TIMEOUT; i++) {
+        if (get_key_sw() == KEY_VALID_VALUE) {
+            ++cnts;
+        } else {
+            --cnts;
+        }
+        if (cnts > KEY_VALID_TIME)
+        {
+            RT_DEBUG_LOG(DEBUG_KEY, ("it is key switch...\n"));
+            break;
+        }
+        if (cnts < -KEY_VALID_TIME)
+        {
+            break;
+        }
+    }
+    GPIO_CLR_INT_FLAG(KEY_SW_PORT, KEY_SW_BIT);
+
+    /* leave interrupt */
+    rt_interrupt_leave();
+}
+
 
 /* Initial components for device */
 INIT_DEVICE_EXPORT(rt_hw_key_init);
