@@ -78,8 +78,8 @@
           <AfterMake>
             <RunUserProg1>1</RunUserProg1>
             <RunUserProg2>1</RunUserProg2>
-            <UserProg1Name>fromelf --bin ".\obj\@L.axf" --output ".\obj\@L.bin"</UserProg1Name>
-            <UserProg2Name>fromelf --text -c ".\obj\@L.axf" --output ".\obj\@L.txt"</UserProg2Name>
+            <UserProg1Name>fromelf --bin ".\build\@L.axf" --output ".\build\@L.bin"</UserProg1Name>
+            <UserProg2Name>fromelf --text -c ".\build\@L.axf" --output ".\build\@L.txt"</UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
           </AfterMake>
@@ -450,6 +450,11 @@
               <FileName>charge.c</FileName>
               <FileType>1</FileType>
               <FilePath>.\drivers\charge.c</FilePath>
+            </File>
+            <File>
+              <FileName>power.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\power.c</FilePath>
             </File>
           </Files>
         </Group>

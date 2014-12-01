@@ -26,4 +26,9 @@ int rt_hw_charge_init(void)
     
     return 0;
 }
+/* Initial components for device */
+INIT_DEVICE_EXPORT(rt_hw_charge_init);
 
+#ifdef RT_USING_FINSH
+#include <finsh.h>
+#endif
