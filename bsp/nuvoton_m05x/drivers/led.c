@@ -9,7 +9,7 @@
  *
  * Change Logs:
  * Date           Author       Notes
- * 2014-11-23     Bright      first implementation
+ * 2014-11-29     Bright      first implementation
  */
 
 #include "led.h"

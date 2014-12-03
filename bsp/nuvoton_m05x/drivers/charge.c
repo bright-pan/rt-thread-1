@@ -31,4 +31,8 @@ INIT_DEVICE_EXPORT(rt_hw_charge_init);
 
 #ifdef RT_USING_FINSH
 #include <finsh.h>
+
+FINSH_FUNCTION_EXPORT_ALIAS(get_charge_input_flag, get_ci, );
+FINSH_FUNCTION_EXPORT_ALIAS(set_charge_output_enable, set_co, );
+
 #endif

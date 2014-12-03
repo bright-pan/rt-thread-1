@@ -456,6 +456,11 @@
               <FileType>1</FileType>
               <FilePath>.\drivers\power.c</FilePath>
             </File>
+            <File>
+              <FileName>oled.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\oled.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
