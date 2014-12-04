@@ -196,12 +196,11 @@ void PWMA_IRQHandler(void)
 
 int pwr_pwm_boost_configure(uint32_t freq, uint8_t duty)
 {
-    /* re-configure adc module */
+    /* re-configure pwm module */
     pwr_pwm_boost_stop();
     NVIC_DisableIRQ(PWMA_IRQn);
     PWM_EnablePeriodInt(PWMA, PWR_PWMA_CHANNEL_BOOST_H, PWM_PERIOD_INT_UNDERFLOW);
-    ADC_POWER_DOWN(ADC);
-    SYS_ResetModule(ADC_RST);
+    SYS_ResetModule(PWM03_RST);
     /* Enable PWM Output pin */
     //PWM_EnableOutput(PWMA, BIT_MASK(PWR_PWM_CHANNEL_BOOST_H) | BIT_MASK(PWR_PWM_CHANNEL_BOOST_L));
     PWM_ConfigOutputChannel(PWMA, PWR_PWMA_CHANNEL_BOOST_H, freq, duty);
@@ -234,6 +233,11 @@ int pwr_pwm_boost_stop(void)
 
 int pwr_pwm_buck_configure(uint32_t freq, uint8_t duty)
 {
+    /* re-configure pwm module */
+    pwr_pwm_buck_stop();
+    NVIC_DisableIRQ(PWMA_IRQn);
+    PWM_EnablePeriodInt(PWMA, PWR_PWMA_CHANNEL_BUCK_H, PWM_PERIOD_INT_UNDERFLOW);
+    SYS_ResetModule(PWM03_RST);
     /* Enable PWM Output pin */
     //PWM_EnableOutput(PWMA, BIT_MASK(PWR_PWM_CHANNEL_BOOST_H) | BIT_MASK(PWR_PWM_CHANNEL_BOOST_L));
     PWM_ConfigOutputChannel(PWMA, PWR_PWMA_CHANNEL_BUCK_H, freq, duty);
@@ -323,7 +327,11 @@ FINSH_FUNCTION_EXPORT_ALIAS(pwr_adc_start, pa_start, );
 FINSH_FUNCTION_EXPORT_ALIAS(pwr_adc_stop, pa_stop, );
 
 FINSH_FUNCTION_EXPORT_ALIAS(pwr_pwm_boost_configure, pp_boost, );
-FINSH_FUNCTION_EXPORT_ALIAS(pwr_pwm_boost_start, pp_start, );
-FINSH_FUNCTION_EXPORT_ALIAS(pwr_pwm_boost_stop, pp_stop, );
+FINSH_FUNCTION_EXPORT_ALIAS(pwr_pwm_boost_start, pp_btstart, );
+FINSH_FUNCTION_EXPORT_ALIAS(pwr_pwm_boost_stop, pp_btstop, );
+
+FINSH_FUNCTION_EXPORT_ALIAS(pwr_pwm_buck_configure, pp_buck, );
+FINSH_FUNCTION_EXPORT_ALIAS(pwr_pwm_buck_start, pp_bkstart, );
+FINSH_FUNCTION_EXPORT_ALIAS(pwr_pwm_buck_stop, pp_bkstop, );
 
 #endif
