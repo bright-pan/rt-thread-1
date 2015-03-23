@@ -75,8 +75,9 @@
 #define RT_DEBUG_LOG(type, message)                                           \
 do                                                                            \
 {                                                                             \
-    if (type)                                                                 \
+    if (type) {                                                               \
         rt_kprintf message;                                                   \
+    }                                                                         \
 }                                                                             \
 while (0)
 
