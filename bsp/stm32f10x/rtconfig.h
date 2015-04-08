@@ -25,7 +25,7 @@
 #define RT_USING_HOOK
 
 /* Using Software Timer */
-/* #define RT_USING_TIMER_SOFT */
+#define RT_USING_TIMER_SOFT
 #define RT_TIMER_THREAD_PRIO		4
 #define RT_TIMER_THREAD_STACK_SIZE	512
 #define RT_TIMER_TICK_PER_SECOND	10
@@ -66,6 +66,8 @@
 #define RT_USING_DEVICE_IPC
 // <bool name="RT_USING_SERIAL" description="Using Serial" default="true" />
 #define RT_USING_SERIAL
+// <bool name="RT_USING_PIN" description="Using Pin" default="true" />
+#define RT_USING_PIN
 
 /* SECTION: Console options */
 #define RT_USING_CONSOLE
