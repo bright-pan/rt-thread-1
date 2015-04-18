@@ -12,7 +12,7 @@
 #define RT_THREAD_PRIORITY_MAX	32
 
 /* Tick per Second */
-#define RT_TICK_PER_SECOND	100
+#define RT_TICK_PER_SECOND	1000
 
 /* SECTION: RT_DEBUG */
 /* Thread Debug */
@@ -72,7 +72,7 @@
 /* the buffer size of console*/
 #define RT_CONSOLEBUF_SIZE	        128
 // <string name="RT_CONSOLE_DEVICE_NAME" description="The device name for console" default="uart1" />
-#define RT_CONSOLE_DEVICE_NAME	    "uart1"
+#define RT_CONSOLE_DEVICE_NAME	    "uart2"
 
 /* SECTION: finsh, a C-Express shell */
 #define RT_USING_FINSH

@@ -52,7 +52,7 @@
           <CreateLib>0</CreateLib>
           <CreateHexFile>0</CreateHexFile>
           <DebugInformation>1</DebugInformation>
-          <BrowseInformation>0</BrowseInformation>
+          <BrowseInformation>1</BrowseInformation>
           <ListingPath>.\build\</ListingPath>
           <HexFormatSelection>1</HexFormatSelection>
           <Merge32K>0</Merge32K>
@@ -347,7 +347,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>1</Optim>
+            <Optim>3</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>0</OneElfS>
@@ -398,7 +398,7 @@
             <ScatterFile></ScatterFile>
             <IncludeLibs></IncludeLibs>
             <IncludeLibsPath></IncludeLibsPath>
-            <Misc> --keep __fsym_* --keep __vsym_*   --keep __rt_init* </Misc>
+            <Misc>--keep __fsym_* --keep __vsym_*   --keep __rt_init*</Misc>
             <LinkerInputFile></LinkerInputFile>
             <DisabledWarnings></DisabledWarnings>
           </LDads>
@@ -442,6 +442,16 @@
               <FileName>usart.c</FileName>
               <FileType>1</FileType>
               <FilePath>drivers\usart.c</FilePath>
+            </File>
+            <File>
+              <FileName>gpio.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\drivers\gpio.c</FilePath>
+            </File>
+            <File>
+              <FileName>kd_process.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>.\kd_process.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -707,6 +717,11 @@
               <FileName>workqueue.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\..\components\drivers\src\workqueue.c</FilePath>
+            </File>
+            <File>
+              <FileName>pin.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\components\drivers\misc\pin.c</FilePath>
             </File>
           </Files>
         </Group>
