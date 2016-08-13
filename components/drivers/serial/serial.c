@@ -146,15 +146,27 @@ rt_inline int _serial_int_tx(struct rt_serial_device *serial, const rt_uint8_t *
 
     while (length)
     {
-        if (serial->ops->putc(serial, *(char*)data) == -1)
+        /*
+         * to be polite with serial console add a line feed
+         * to the carriage return character
+         */
+        if (*data == '\n' && (serial->parent.open_flag & RT_DEVICE_FLAG_STREAM))
+        {
+            if (serial->ops->putc(serial, '\r') == -1)
+            {
+                rt_completion_wait(&(tx->completion), RT_WAITING_FOREVER);
+                continue;
+            }
+        }
+
+        if (serial->ops->putc(serial, *data) == -1)
         {
             rt_completion_wait(&(tx->completion), RT_WAITING_FOREVER);
             continue;
         }
-
-        data ++; length --;
+        ++ data;
+        -- length;
     }
-
     return size - length;
 }
 
@@ -614,7 +626,7 @@ static rt_err_t rt_serial_control(struct rt_device *dev,
 		            serial->ops->configure(serial, (struct serial_configure *)args);
 				}
 			}
-			
+
             break;
 
         default :
