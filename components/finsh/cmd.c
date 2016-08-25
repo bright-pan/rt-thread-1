@@ -122,7 +122,7 @@ static long _list_thread(struct rt_list_node *list)
     for (node = list->next; node != list; node = node->next)
     {
         thread = rt_list_entry(node, struct rt_thread, list);
-        rt_kprintf("%-*.*s %3d ", maxlen, RT_NAME_MAX, thread->name, thread->current_priority);
+        rt_kprintf("%-*.*s %3d ", maxlen, RT_NAME_MAX, thread->name, (rt_uint32_t)thread->current_priority);
 
         if (thread->stat == RT_THREAD_READY)        rt_kprintf(" ready  ");
         else if (thread->stat == RT_THREAD_SUSPEND) rt_kprintf(" suspend");
@@ -133,7 +133,7 @@ static long _list_thread(struct rt_list_node *list)
         while (*ptr == '#')ptr ++;
 
         rt_kprintf(" 0x%08x 0x%08x    %02d%%   0x%08x %03d\n",
-                   thread->stack_size + ((rt_uint32_t)thread->stack_addr - (rt_uint32_t)thread->sp),
+                   thread->stack_size + ((rt_uint32_t)thread->stack_addr - (rt_ubase_t)thread->sp),
                    thread->stack_size,
                    (thread->stack_size - ((rt_uint32_t) ptr - (rt_uint32_t) thread->stack_addr)) * 100
                         / thread->stack_size,
@@ -574,7 +574,7 @@ int list_module(void)
     {
         module = (struct rt_module *)(rt_list_entry(node, struct rt_object, list));
         rt_kprintf("%-*.*s %-04d  0x%08x\n",
-                   maxlen, RT_NAME_MAX, 
+                   maxlen, RT_NAME_MAX,
                    module->parent.name, module->nref, module->module_space);
     }
 
