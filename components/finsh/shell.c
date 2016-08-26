@@ -305,6 +305,7 @@ void finsh_thread_entry(void *parameter)
 #ifndef FINSH_USING_MSH_ONLY
     finsh_init(&shell->parser);
 #endif
+    rt_show_version();
     rt_kprintf(FINSH_PROMPT);
 
     /* set console device as shell device */
